@@ -51,7 +51,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         return {
             'total': t,
-            days,//short syntax for 'days': days,
+            days, //short syntax for 'days': days,
             hours,
             minutes,
             seconds
@@ -75,6 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
             timeInterval = setInterval(updateClock, 1000);
 
         updateClock();
+
         function updateClock() {
             const t = getTimeRemaining(endtime);
             days.innerHTML = getZero(t.days);
@@ -94,37 +95,46 @@ window.addEventListener('DOMContentLoaded', () => {
     setClock('.timer ', deadline);
 
     //Modal
-    const modalBtn = document.querySelectorAll("[data-modal]"),
+    const modalTrigger = document.querySelectorAll("[data-modal]"),
         modal = document.querySelector(".modal"),
         modalClose = document.querySelector("[data-close]");
 
-    function showModal (item){
-        item.classList.add("show");
-        item.classList.remove("hide");
+    function showModal() {
+        modal.classList.add("show");
+        modal.classList.remove("hide");
         document.body.style.overflow = "hidden";
+        clearInterval(modalTimerID);//отменить повторный вызов модельного окна по команде setInterval
     }
-    function closeModal () {
+
+    function closeModal() {
         modal.classList.add("hide");
         modal.classList.remove("show");
         document.body.style.overflow = "";
     }
 
-    modalBtn.forEach(btn => {
-        btn.addEventListener("click", () => {
-            showModal(modal);
-        })
+    modalTrigger.forEach(btn => {
+        btn.addEventListener("click", showModal)
     })
 
     modalClose.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => {
-        if (e.target == modal){
+    modal.addEventListener("click", (e) => { //закрыть модальное окнопри нажатии вне области самого окна (область вокруг - это div.modal)
+        if (e.target == modal) {
             closeModal();
         }
     })
     document.addEventListener("keydown", (e) => {
-        if (e.code === "Escape"){
+        if (e.code === "Escape") { //закрыть модальное окнопри нажатии ESCAPE
             closeModal();
         }
     })
+
+    const modalTimerID = setInterval(showModal, 8000);//показать модалку через 8 сек после того, как пользователь зашел на сайт
+    function showModalByScroll() {//показать модалку, если пользователь докрутил до низа страницы
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight /* - 1 */) {//если расстояние прокрученное от верха страницы (window.pageYOffset) + размер видимого окна клиента (docEl.clientHeight) >= всей доине док-та с учетом перемотки (docEl.scrollHeight)
+            showModal();
+            window.removeEventListener("scroll", showModalByScroll);
+        }
+    }
+    window.addEventListener("scroll", showModalByScroll);
 
 });
