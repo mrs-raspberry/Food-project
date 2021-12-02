@@ -137,4 +137,68 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener("scroll", showModalByScroll);
 
+    //Используем классы для карточек
+
+    class MenuCard {
+        constructor(src, alt, subtitle, descr, price, parentSelector){
+            this.src = src;
+            this.alt = alt;
+            this.subtitle = subtitle;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.transform = 9;//задаем курс валют (статическое значение), В дальнейшем будет использоваться более сложный механизм, курс валюты будет подгружаться из стороннего источника
+            this.convertToUHA ();//запускаем тут же Ф по конвертации валюты
+
+        }
+
+        convertToUHA (){//доп.функционал для конвертации цены, данной в долларах в гривны. 
+            this.price = this.price * this.transform;//перезаписываем значение price
+        }
+
+        render (){
+            const element = document.createElement("div");
+            element.innerHTML = `
+                <div class="menu__item">
+                    <img src=${this.src} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.subtitle}</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span></span>${this.price}грн/день</div>
+                </div>        
+            `;
+            this.parent.append(element);
+        }
+    }
+
+    const fitness = new MenuCard(//если создаем новую переменную, ее можно будет переиспользовать в будущем, если объект используем только 1 раз, можно записать new MenuCard(аргументы...)..render();, но в этом случае после исполнения она исчезнет, переиспользовать объект нельзя будет
+        "img/tabs/vegy.jpg",//подставляем в функции ${this.src}, а значение уже берем в кавычки, хотя можно и наоборот, но не желательно!
+        "vegy",
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        25,
+        ".menu .container",
+    );
+    fitness.render();
+
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        65,
+        ".menu .container",
+    ).render();
+
+    new MenuCard(
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+        48,
+        ".menu .container",
+    ).render();
+
 });
