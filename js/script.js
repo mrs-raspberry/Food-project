@@ -234,30 +234,32 @@ window.addEventListener('DOMContentLoaded', () => {
             `;
             form.insertAdjacentElement("afterend", statusMessage);
 
-            const r = new XMLHttpRequest();
-            r.open("POST", "server.php");
-            r.setRequestHeader("Content-type", "application/json");//убрать, если отправлять данные в формате formData
             const dataBody = new FormData(form);
 
-            const object = {};//убрать, если отправлять данные в формате formData
+            const object = {};//убрать, если отправлять formData
             dataBody.forEach(function (value, key){
                 object[key] = value;
-            });//убрать, если отправлять данные в формате formData
+            });//убрать, если отправлять formData
 
-            const json = JSON.stringify(object);//убрать, если отправлять данные в формате formData
-            r.send(json);
-            
-/*             r.send(dataBody);
- */
-            r.addEventListener("load", () => {
-                if (r.status === 200){
-                    console.log(r.response);
-                    form.reset();
-                    showThanksModal(message.success);
-                    statusMessage.remove();
-                }else{
-                    showThanksModal(message.failure);
-                }
+            fetch("server.php", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },//убрать, если formData
+                /* body: dataBody,//вернуть, если formData */
+                body: JSON.stringify(object)//убрать, если formData
+            })
+            .then(data => data.text())//супер короткое написание колбек Ф, кот return data в формате string
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            })
+            .catch(() => {
+                showThanksModal(message.failure);
+            })
+            .finally(() => {
+                form.reset();
             })
         });
     }
@@ -285,6 +287,8 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 8000);
     };
+
+
 
 
 });
