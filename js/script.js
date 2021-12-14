@@ -140,10 +140,10 @@ window.addEventListener('DOMContentLoaded', () => {
     //Используем классы для карточек
 
     class MenuCard {
-        constructor(src, alt, subtitle, descr, price, parentSelector, ...classes){
-            this.src = src;
-            this.alt = alt;
-            this.subtitle = subtitle;
+        constructor(img, altimg, title, descr, price, parentSelector, ...classes){
+            this.img = img;
+            this.altimg = altimg;
+            this.title = title;
             this.descr = descr;
             this.price = price;
             this.classes = classes;
@@ -164,8 +164,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             this.classes.forEach(className => element.classList.add(className));//перебираем все классы, указанные в качестве аргументов во вновьсозданных объектах и каждый присваеваем эл-ту, который вставляем на страницу
             element.innerHTML = `
-                <img src=${this.src} alt=${this.alt}>
-                <h3 class="menu__item-subtitle">${this.subtitle}</h3>
+                <img src=${this.img} alt=${this.altimg}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
                 <div class="menu__item-descr">${this.descr}</div>
                 <div class="menu__item-divider"></div>
                 <div class="menu__item-price">
@@ -175,38 +175,6 @@ window.addEventListener('DOMContentLoaded', () => {
             this.parent.append(element);
         }
     }
-
-    const fitness = new MenuCard(//если создаем новую переменную, ее можно будет переиспользовать в будущем, если объект используем только 1 раз, можно записать new MenuCard(аргументы...)..render();, но в этом случае после исполнения она исчезнет, переиспользовать объект нельзя будет
-        "img/tabs/vegy.jpg",//подставляем в функции ${this.src}, а значение уже берем в кавычки, хотя можно и наоборот, но не желательно!
-        "vegy",
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        25,
-        ".menu .container",
-        "menu__item",
-        "big"
-    );
-    fitness.render();
-
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        65,
-        ".menu .container",
-        "menu__item",
-    ).render();
-
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        48,
-        ".menu .container",
-        "menu__item",
-    ).render();
 
     //FORMS
 
@@ -219,10 +187,39 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     forms.forEach(item => {
-        postForm(item);
+        bindPostForm(item);
     })
 
-    function postForm(form){
+    const postForm = async (url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },//убрать, если formData
+            /* body: dataBody,//вернуть, если formData */
+            body: data,
+        });
+
+        return await res.json();
+    };
+
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        if(!res.ok){
+            throw new Error(`Could not get data from ${url}, status: ${res.status}`)
+        };
+
+        return await res.json();
+    };
+
+    getResource("http://localhost:3000/menu")
+    .then(obj => {
+        obj.forEach(({img, altimg, title, descr, price}) => {
+            new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+        });
+    })
+
+    function bindPostForm(form){
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -236,20 +233,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const dataBody = new FormData(form);
 
-            const object = {};//убрать, если отправлять formData
-            dataBody.forEach(function (value, key){
-                object[key] = value;
-            });//убрать, если отправлять formData
+            const json = JSON.stringify(Object.fromEntries(dataBody.entries()));// JSON.stringify преобразует значение JavaScript в строку JSON
 
-            fetch("server.php", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },//убрать, если formData
-                /* body: dataBody,//вернуть, если formData */
-                body: JSON.stringify(object)//убрать, если formData
-            })
-            .then(data => data.text())//супер короткое написание колбек Ф, кот return data в формате string
+            postForm("http://localhost:3000/requests", json)
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success);
@@ -288,7 +274,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 8000);
     };
 
-
-
-
+    fetch("http://localhost:3000/menu")
+    .then(data => data.json())
+    .then(res => (console.log(res)))//выведет все, что есть в db.json в меню карточках в виде массива
 });
