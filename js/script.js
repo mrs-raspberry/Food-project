@@ -175,6 +175,22 @@ window.addEventListener('DOMContentLoaded', () => {
             this.parent.append(element);
         }
     }
+    
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        if(!res.ok){
+            throw new Error(`Could not get data from ${url}, status: ${res.status}`)
+        };
+
+        return await res.json();
+    };
+
+    getResource("http://localhost:3000/menu")
+    .then(obj => {
+        obj.forEach(({img, altimg, title, descr, price}) => {
+            new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+        });
+    })
 
     //FORMS
 
@@ -202,22 +218,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         return await res.json();
     };
-
-    const getResource = async (url) => {
-        const res = await fetch(url);
-        if(!res.ok){
-            throw new Error(`Could not get data from ${url}, status: ${res.status}`)
-        };
-
-        return await res.json();
-    };
-
-    getResource("http://localhost:3000/menu")
-    .then(obj => {
-        obj.forEach(({img, altimg, title, descr, price}) => {
-            new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
-        });
-    })
 
     function bindPostForm(form){
         form.addEventListener("submit", (e) => {
@@ -277,4 +277,56 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch("http://localhost:3000/menu")
     .then(data => data.json())
     .then(res => (console.log(res)))//выведет все, что есть в db.json в меню карточках в виде массива
+
+
+    //SLIDER
+
+    const slides = document.querySelectorAll(".offer__slide"),
+        next = document.querySelector(".offer__slider-next"),
+        prev = document.querySelector(".offer__slider-prev"),
+        current = document.querySelector("#current"),
+        total = document.querySelector("#total");
+    let slideIndex = 1;
+
+    showSlide(slideIndex);
+
+    function changeTotalCounter () {
+        if (slides.length < 10) {
+            total.innerHTML = `0${slides.length}`;
+        }else{
+            total.innerHTML = slides.length;
+        }
+    }
+    changeTotalCounter();
+
+    function showSlide (n) {
+        if (n > slides.length){
+            slideIndex = 1;
+        }
+        if (n < 1){
+            slideIndex = slides.length;
+        }
+        slides.forEach((slide) => slide.style.display = "none");
+        slides[slideIndex-1].style.display = "block";
+
+        if (slideIndex < 10) {
+            current.innerHTML = `0${slideIndex}`;
+        }else{
+            current.innerHTML = slideIndex;
+        };
+
+    }
+    function slidePlus(n) {
+        showSlide(slideIndex += n);
+    }
+
+    next.addEventListener("click", () => {
+        console.log("right");
+        slidePlus(1);
+    })
+    prev.addEventListener("click", () => {
+        console.log("left");
+        slidePlus(-1);
+    })
+    
 });
