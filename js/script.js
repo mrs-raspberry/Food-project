@@ -103,7 +103,7 @@ window.addEventListener('DOMContentLoaded', () => {
         modal.classList.add("show");
         modal.classList.remove("hide");
         document.body.style.overflow = "hidden";
-        clearInterval(modalTimerID);//отменить повторный вызов модельного окна по команде setInterval
+        clearInterval(modalTimerID); //отменить повторный вызов модельного окна по команде setInterval
     }
 
     function closeModal() {
@@ -128,9 +128,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    const modalTimerID = setInterval(showModal, 50000);//показать модалку через 8 сек после того, как пользователь зашел на сайт
-    function showModalByScroll() {//показать модалку, если пользователь докрутил до низа страницы
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight /* - 1 */) {//если расстояние прокрученное от верха страницы (window.pageYOffset) + размер видимого окна клиента (docEl.clientHeight) >= всей доине док-та с учетом перемотки (docEl.scrollHeight)
+    const modalTimerID = setInterval(showModal, 50000); //показать модалку через 8 сек после того, как пользователь зашел на сайт
+    function showModalByScroll() { //показать модалку, если пользователь докрутил до низа страницы
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight /* - 1 */ ) { //если расстояние прокрученное от верха страницы (window.pageYOffset) + размер видимого окна клиента (docEl.clientHeight) >= всей доине док-та с учетом перемотки (docEl.scrollHeight)
             showModal();
             window.removeEventListener("scroll", showModalByScroll);
         }
@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //Используем классы для карточек
 
     class MenuCard {
-        constructor(img, altimg, title, descr, price, parentSelector, ...classes){
+        constructor(img, altimg, title, descr, price, parentSelector, ...classes) {
             this.img = img;
             this.altimg = altimg;
             this.title = title;
@@ -148,21 +148,21 @@ window.addEventListener('DOMContentLoaded', () => {
             this.price = price;
             this.classes = classes;
             this.parent = document.querySelector(parentSelector);
-            this.transform = 9;//задаем курс валют (статическое значение), В дальнейшем будет использоваться более сложный механизм, курс валюты будет подгружаться из стороннего источника
-            this.convertToUHA ();//запускаем тут же Ф по конвертации валюты
+            this.transform = 9; //задаем курс валют (статическое значение), В дальнейшем будет использоваться более сложный механизм, курс валюты будет подгружаться из стороннего источника
+            this.convertToUHA(); //запускаем тут же Ф по конвертации валюты
 
         }
 
-        convertToUHA (){//доп.функционал для конвертации цены, данной в долларах в гривны. 
-            this.price = this.price * this.transform;//перезаписываем значение price
+        convertToUHA() { //доп.функционал для конвертации цены, данной в долларах в гривны. 
+            this.price = this.price * this.transform; //перезаписываем значение price
         }
 
-        render (){
+        render() {
             const element = document.createElement("div");
-            if(this.classes.length === 0){//на случай, если разраб не добавил каких-л классов в ...classes
-                this.classes.push("menu__item");//в нашем случае эл-ту обязательно надо добавить "menu__item" класс, т.к именно в нем прописано поведение эл-в меню на странице, иначе верстка поплывет
+            if (this.classes.length === 0) { //на случай, если разраб не добавил каких-л классов в ...classes
+                this.classes.push("menu__item"); //в нашем случае эл-ту обязательно надо добавить "menu__item" класс, т.к именно в нем прописано поведение эл-в меню на странице, иначе верстка поплывет
             }
-            this.classes.forEach(className => element.classList.add(className));//перебираем все классы, указанные в качестве аргументов во вновьсозданных объектах и каждый присваеваем эл-ту, который вставляем на страницу
+            this.classes.forEach(className => element.classList.add(className)); //перебираем все классы, указанные в качестве аргументов во вновьсозданных объектах и каждый присваеваем эл-ту, который вставляем на страницу
             element.innerHTML = `
                 <img src=${this.img} alt=${this.altimg}>
                 <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -175,10 +175,10 @@ window.addEventListener('DOMContentLoaded', () => {
             this.parent.append(element);
         }
     }
-    
+
     const getResource = async (url) => {
         const res = await fetch(url);
-        if(!res.ok){
+        if (!res.ok) {
             throw new Error(`Could not get data from ${url}, status: ${res.status}`)
         };
 
@@ -186,18 +186,24 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     getResource("http://localhost:3000/menu")
-    .then(obj => {
-        obj.forEach(({img, altimg, title, descr, price}) => {
-            new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
-        });
-    })
+        .then(obj => {
+            obj.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
+                new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+            });
+        })
 
     //FORMS
 
     const forms = document.querySelectorAll("form");
 
     const message = {
-        loading: "icons/spinner.svg",//путь к картинке
+        loading: "icons/spinner.svg", //путь к картинке
         success: "Спасибо, мы свяжемся с Вами в ближайшее время",
         failure: "Что-то пошло не так..."
     }
@@ -211,7 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
-            },//убрать, если formData
+            }, //убрать, если formData
             /* body: dataBody,//вернуть, если formData */
             body: data,
         });
@@ -219,7 +225,7 @@ window.addEventListener('DOMContentLoaded', () => {
         return await res.json();
     };
 
-    function bindPostForm(form){
+    function bindPostForm(form) {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -233,24 +239,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const dataBody = new FormData(form);
 
-            const json = JSON.stringify(Object.fromEntries(dataBody.entries()));// JSON.stringify преобразует значение JavaScript в строку JSON
+            const json = JSON.stringify(Object.fromEntries(dataBody.entries())); // JSON.stringify преобразует значение JavaScript в строку JSON
 
             postForm("http://localhost:3000/requests", json)
-            .then(data => {
-                console.log(data);
-                showThanksModal(message.success);
-                statusMessage.remove();
-            })
-            .catch(() => {
-                showThanksModal(message.failure);
-            })
-            .finally(() => {
-                form.reset();
-            })
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                })
+                .catch(() => {
+                    showThanksModal(message.failure);
+                })
+                .finally(() => {
+                    form.reset();
+                })
         });
     }
 
-    function showThanksModal (alert) {
+    function showThanksModal(alert) {
         const previousModal = document.querySelector(".modal__dialog");
 
         previousModal.classList.add("hide");
@@ -275,58 +281,86 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     fetch("http://localhost:3000/menu")
-    .then(data => data.json())
-    .then(res => (console.log(res)))//выведет все, что есть в db.json в меню карточках в виде массива
+        .then(data => data.json())
+        .then(res => (console.log(res))) //выведет все, что есть в db.json в меню карточках в виде массива
 
 
-    //SLIDER
+    //SLIDER_difficult variant, but more up-to-date
 
     const slides = document.querySelectorAll(".offer__slide"),
         next = document.querySelector(".offer__slider-next"),
         prev = document.querySelector(".offer__slider-prev"),
         current = document.querySelector("#current"),
-        total = document.querySelector("#total");
-    let slideIndex = 1;
+        total = document.querySelector("#total"),
+        slidesWrapper = document.querySelector(".offer__slider-wrapper"),
+        slidesField = document.querySelector(".offer__slider-inner"),
+        width = window.getComputedStyle(slidesWrapper).width;//получить примененный к анному эл-ту стиль, а именно его ширину//650px
+        
+    let slideIndex = 1;//показываем по дефолту номер 1
+    let offset = 0;//показываем по дефолту нулевой эл-т из псевдомассива
 
-    showSlide(slideIndex);
+    slidesField.style.display = "flex";
+    slidesField.style.width = 100 * slides.length + "%";//если 4 слайда, то ш=400% от своего родителя
+    slidesField.style.transition = "0.5s all";
+    slidesWrapper.style.overflow = "hidden";//скрыть то, что не помещается в видимое окно
+    slides.forEach(slide => {
+        slide.style.width = width;//убедиться, что размер новых картинок не будет превышать размер окна
+    })
 
-    function changeTotalCounter () {
-        if (slides.length < 10) {
-            total.innerHTML = `0${slides.length}`;
-        }else{
-            total.innerHTML = slides.length;
-        }
-    }
-    changeTotalCounter();
-
-    function showSlide (n) {
-        if (n > slides.length){
-            slideIndex = 1;
-        }
-        if (n < 1){
-            slideIndex = slides.length;
-        }
-        slides.forEach((slide) => slide.style.display = "none");
-        slides[slideIndex-1].style.display = "block";
-
-        if (slideIndex < 10) {
-            current.innerHTML = `0${slideIndex}`;
-        }else{
-            current.innerHTML = slideIndex;
-        };
-
-    }
-    function slidePlus(n) {
-        showSlide(slideIndex += n);
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
+    } else {
+        total.textContent = slides.length;
+        current.textContent = slideIndex;
     }
 
     next.addEventListener("click", () => {
-        console.log("right");
-        slidePlus(1);
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);//увеличиваем размер отступа на размер слайда, с помощью слайса отрезаем px
+        };
+        slidesField.style.transform = `translateX(-${offset}px)`;//сдвигаем слайдер влево за счет уменьшения офсета в минус
+            
+        if (slideIndex == slides.length) {//если дошли до последнего в карусели
+            slideIndex = 1;//переходим на первый
+        } else {
+            slideIndex++;
+        }
+        
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+            current.textContent = `0${slideIndex}`;
+        } else {
+            total.textContent = slides.length;
+            current.textContent = slideIndex;
+        }
     })
+
     prev.addEventListener("click", () => {
         console.log("left");
-        slidePlus(-1);
-    })
+        if (offset == 0) {
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+            console.log(offset);
+        };
+        slidesField.style.transform = `translateX(-${offset}px)`;//если в офсете получаем ся отрицательное значение, то тут будет офсет увеличиваться, т.к минус на минус = +
     
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex--;
+        }
+        
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+            current.textContent = `0${slideIndex}`;
+        } else {
+            total.textContent = slides.length;
+            current.textContent = slideIndex;
+        }
+    })
+
 });
