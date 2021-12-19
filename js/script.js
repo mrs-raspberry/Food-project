@@ -288,6 +288,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //SLIDER_difficult variant, but more up-to-date
 
     const slides = document.querySelectorAll(".offer__slide"),
+        slider = document.querySelector(".offer__slider"),//весь эл-т, включая навигацию и номера
         next = document.querySelector(".offer__slider-next"),
         prev = document.querySelector(".offer__slider-prev"),
         current = document.querySelector("#current"),
@@ -306,14 +307,44 @@ window.addEventListener('DOMContentLoaded', () => {
     slides.forEach(slide => {
         slide.style.width = width;//убедиться, что размер новых картинок не будет превышать размер окна
     })
+    slider.style.position = "relative";//для абсолютного позиционрования навигационных точек
 
-    if (slides.length < 10) {
-        total.textContent = `0${slides.length}`;
-        current.textContent = `0${slideIndex}`;
-    } else {
-        total.textContent = slides.length;
-        current.textContent = slideIndex;
+    const indicators = document.createElement("ol"),//обертка для точек
+        dots = [];//все вновь созданные точки добавляем в данный массив
+    indicators.classList.add("carousel-indicators");//добавили еще один файл со стилями, в нем есть точки и обертка для них
+    slider.append(indicators);
+
+    for (let i = 0; i < slides.length; i++){//создаем кол-во точек равное кол-ву слайдов
+        const dot = document.createElement("li");
+        dot.setAttribute("data-slide-to", i + 1);//устанавливаем дата аттрибут со значением i+1, кот будет равен slideIndex
+        dot.classList.add("dot");
+        indicators.append(dot);
+        dots.push(dot);//добавляем эл-ты в ранее созданный массив, чтобы навесить класс активности
+/*         if (i == 0){
+            dot.style.opacity = "1";//по дефолту устанавливаем активной первую кнопку
+        } */
     }
+
+    const setSlideIndex = () => {
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+        } else {
+            total.textContent = slides.length;
+        }
+
+        if (slideIndex < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    };
+    setSlideIndex();
+
+    const acivateDot = () => {
+        dots.forEach(dot => dot.style.opacity = ".5");//у всех 50% прозрачности
+        dots[slideIndex - 1].style.opacity = "1";//100% цвета без прозрачности - показываем активную кнопку
+    };
+    acivateDot();
 
     next.addEventListener("click", () => {
         if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
@@ -328,25 +359,18 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             slideIndex++;
         }
-        
-        if (slides.length < 10) {
-            total.textContent = `0${slides.length}`;
-            current.textContent = `0${slideIndex}`;
-        } else {
-            total.textContent = slides.length;
-            current.textContent = slideIndex;
-        }
+   
+        setSlideIndex();
+        acivateDot();
     })
 
     prev.addEventListener("click", () => {
-        console.log("left");
         if (offset == 0) {
             offset = +width.slice(0, width.length - 2) * (slides.length - 1);
         } else {
             offset -= +width.slice(0, width.length - 2);
-            console.log(offset);
         };
-        slidesField.style.transform = `translateX(-${offset}px)`;//если в офсете получаем ся отрицательное значение, то тут будет офсет увеличиваться, т.к минус на минус = +
+        slidesField.style.transform = `translateX(-${offset}px)`;//если в офсете получается отрицательное значение, то тут будет офсет увеличиваться, т.к минус на минус = +
     
         if (slideIndex == 1) {
             slideIndex = slides.length;
@@ -354,13 +378,21 @@ window.addEventListener('DOMContentLoaded', () => {
             slideIndex--;
         }
         
-        if (slides.length < 10) {
-            total.textContent = `0${slides.length}`;
-            current.textContent = `0${slideIndex}`;
-        } else {
-            total.textContent = slides.length;
-            current.textContent = slideIndex;
-        }
+        setSlideIndex();
+        acivateDot();
     })
+
+    dots.forEach((dot) => {
+        dot.addEventListener("click", (event) => {
+            const slideTo = event.target.getAttribute("data-slide-to");//получаем значение дата аттрибута 
+            slideIndex = slideTo;
+
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);//контролируем размер отступа за счет дата аттрибута присвоенного при формировании эл-та
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            setSlideIndex();
+            acivateDot();
+        });
+    });
 
 });
