@@ -280,9 +280,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 8000);
     };
 
-    fetch("http://localhost:3000/menu")
+    /* fetch("http://localhost:3000/menu")//шпора по fetch
         .then(data => data.json())
-        .then(res => (console.log(res))) //выведет все, что есть в db.json в меню карточках в виде массива
+        .then(res => (console.log(res))) */
 
 
     //SLIDER_difficult variant, but more up-to-date
@@ -325,7 +325,7 @@ window.addEventListener('DOMContentLoaded', () => {
         } */
     }
 
-    const setSlideIndex = () => {
+    function setSlideIndex () {
         if (slides.length < 10) {
             total.textContent = `0${slides.length}`;
         } else {
@@ -337,20 +337,24 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             current.textContent = slideIndex;
         }
-    };
+    }
     setSlideIndex();
 
-    const acivateDot = () => {
+    function acivateDot () {
         dots.forEach(dot => dot.style.opacity = ".5");//у всех 50% прозрачности
         dots[slideIndex - 1].style.opacity = "1";//100% цвета без прозрачности - показываем активную кнопку
-    };
+    }
     acivateDot();
 
+    function getDigits (str) {
+        return +str.replace(/\D/g, "");//добавляем регулярное выражение, чтобы оптимизировать код и исключить ошибки в будущем
+    };
+
     next.addEventListener("click", () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+        if (offset == getDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);//увеличиваем размер отступа на размер слайда, с помощью слайса отрезаем px
+            offset += getDigits(width);//увеличиваем размер отступа на размер слайда, с помощью слайса отрезаем px
         };
         slidesField.style.transform = `translateX(-${offset}px)`;//сдвигаем слайдер влево за счет уменьшения офсета в минус
             
@@ -366,9 +370,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     prev.addEventListener("click", () => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+            offset = getDigits(width) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= getDigits(width);
         };
         slidesField.style.transform = `translateX(-${offset}px)`;//если в офсете получается отрицательное значение, то тут будет офсет увеличиваться, т.к минус на минус = +
     
@@ -387,12 +391,22 @@ window.addEventListener('DOMContentLoaded', () => {
             const slideTo = event.target.getAttribute("data-slide-to");//получаем значение дата аттрибута 
             slideIndex = slideTo;
 
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);//контролируем размер отступа за счет дата аттрибута присвоенного при формировании эл-та
+            offset = getDigits(width) * (slideTo - 1);//контролируем размер отступа за счет дата аттрибута присвоенного при формировании эл-та
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             setSlideIndex();
             acivateDot();
         });
     });
+    let person = {
+        name: "Anna",
+        surname: "Malina",
+    };
+    let myInfo = JSON.stringify(person);
+    localStorage.setItem("me", myInfo);
+    console.log(JSON.parse(localStorage.getItem("me")));
+    localStorage.removeItem("surname");//убрать эл-т
+    /* localStorage.clear();//очистить весь объект */
+
 
 });
