@@ -347,14 +347,14 @@ window.addEventListener('DOMContentLoaded', () => {
     acivateDot();
 
     function getDigits (str) {
-        return +str.replace(/\D/g, "");//добавляем регулярное выражение, чтобы оптимизировать код и исключить ошибки в будущем
+        return +str.replace(/\D/g, "");//получаем цифры с помощью регулярного выражения вместо метода slice, чтобы оптимизировать код и исключить ошибки в будущем
     };
 
     next.addEventListener("click", () => {
         if (offset == getDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
-            offset += getDigits(width);//увеличиваем размер отступа на размер слайда, с помощью слайса отрезаем px
+            offset += getDigits(width);//увеличиваем размер отступа на размер слайда
         };
         slidesField.style.transform = `translateX(-${offset}px)`;//сдвигаем слайдер влево за счет уменьшения офсета в минус
             
@@ -398,15 +398,73 @@ window.addEventListener('DOMContentLoaded', () => {
             acivateDot();
         });
     });
-    let person = {
-        name: "Anna",
-        surname: "Malina",
-    };
-    let myInfo = JSON.stringify(person);
-    localStorage.setItem("me", myInfo);
-    console.log(JSON.parse(localStorage.getItem("me")));
-    localStorage.removeItem("surname");//убрать эл-т
-    /* localStorage.clear();//очистить весь объект */
 
+    // Calculator
+    const result = document.querySelector(".calculating__result span");
 
+    let sex = "female",
+        height, weight, age,
+        ratio = 1.375;
+    
+    function calcTotal () {
+        if(!sex || !height || !weight || !age || !ratio){//проверяем все ли поля заполнены данными
+            result.textContent = "_____";
+            return;//не считаем дальше, если условие выполнилось
+        }
+       
+        if (sex === "female"){
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);//результат округляем до ближайшего целого числа
+        }else{
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+        }
+    }
+    calcTotal();
+
+    function getStaticInfo (parentSeletor, activeClass){
+        const elements = document.querySelectorAll(`${parentSeletor} div`);
+
+        elements.forEach((elem) => {
+            elem.addEventListener("click", (event) => {
+                if (event.target.getAttribute("data-ratio")){//если кнопка, на кот кликнули содержит дата аттрибут, то это последний блок, берем себе значение этого аттрибута
+                    ratio = event.target.getAttribute("data-ratio");
+                }else{//если нет, то это первый блок и мы берем пол
+                    sex = event.target.getAttribute("id");
+                };
+
+                elements.forEach(item => {//меняем при клике класс активности
+                    item.classList.remove(activeClass)
+                });                    
+                event.target.classList.add(activeClass);
+
+                calcTotal();
+            });
+        });
+    }
+    getStaticInfo("#gender", "calculating__choose-item_active");//вызываем Ф для каждого блока отдельно, класс активности одинаковый
+    getStaticInfo(".calculating__choose_big", "calculating__choose-item_active")
+
+    function getDynamicInfo (field) {//Ф для каждого поля ввода
+        const inputs = document.querySelectorAll(field);
+        inputs.forEach(input => {
+            input.addEventListener("input", () => {
+               switch(input.getAttribute("id")) {//проверяем значение id, в каждом кейсе присваиваем значение своей переменную
+                    case "height": 
+                    height = +input.value;
+                    break;
+
+                    case "weight": 
+                    weight = +input.value;
+                    break;
+
+                    case "age": 
+                    age = +input.value;
+                    break;
+                };
+                calcTotal();//для динамического пересчета данных
+            });          
+        })
+    }
+    getDynamicInfo("#height");//вызываем Ф для каждого поля
+    getDynamicInfo("#weight");
+    getDynamicInfo("#age");
 });
