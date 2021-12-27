@@ -1,8 +1,4 @@
-function timer() {
-    //TIMER
-
-    const deadline = 'December 31, 2021';
-
+function timer(id, deadline) {
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
             days = Math.floor(t / (1000 * 60 * 60 * 24)), //общее кол-во мс делим на мс в сутках (8,64e+7), с пом Math.floor() округляем до ближайшего меньшего целого
@@ -52,7 +48,7 @@ function timer() {
             }
         }
     }
-    setClock('.timer ', deadline);
+    setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

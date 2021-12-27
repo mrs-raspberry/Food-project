@@ -1,8 +1,7 @@
-function tabs() {
-    //TABS
-    const tabContent = document.querySelectorAll('.tabcontent'),
-        tabsWrapper = document.querySelector('.tabheader__items'),
-        tabs = document.querySelectorAll('.tabheader__item');
+function tabs(contentSelector, wrapperSelector, tabsHeader, activeClass) {
+    const tabContent = document.querySelectorAll(contentSelector),
+        tabsWrapper = document.querySelector(wrapperSelector),
+        tabs = document.querySelectorAll(tabsHeader);
 
     function hideTabContent() {
         tabContent.forEach(item => {
@@ -11,7 +10,7 @@ function tabs() {
         });
 
         tabs.forEach(item => {
-            item.classList.remove("tabheader__item_active");
+            item.classList.remove(activeClass);
         });
     }
 
@@ -19,7 +18,7 @@ function tabs() {
         tabContent[i].classList.add('show', 'fade');
         tabContent[i].classList.remove('hide');
 
-        tabs[i].classList.add("tabheader__item_active");
+        tabs[i].classList.add(activeClass);
     }
 
     hideTabContent();
@@ -28,7 +27,7 @@ function tabs() {
     tabsWrapper.addEventListener('click', (event) => {
         const target = event.target;
 
-        if (target && target.classList.contains('tabheader__item')) {
+        if (target && target.classList.contains(tabsHeader.slice(1))) {//slice нужен, чтобы убрать точку у селектора '.tabheader__item', кот передается сюда в кач-ве аргумента tabsHeader
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
@@ -39,4 +38,4 @@ function tabs() {
     });
 }
 
-module.exports = tabs;
+export default tabs;

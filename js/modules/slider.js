@@ -1,15 +1,13 @@
-function slider(){
-    //SLIDER_difficult variant, but more up-to-date
-
-    const slides = document.querySelectorAll(".offer__slide"),
-        slider = document.querySelector(".offer__slider"),//весь эл-т, включая навигацию и номера
-        next = document.querySelector(".offer__slider-next"),
-        prev = document.querySelector(".offer__slider-prev"),
-        current = document.querySelector("#current"),
-        total = document.querySelector("#total"),
-        slidesWrapper = document.querySelector(".offer__slider-wrapper"),
-        slidesField = document.querySelector(".offer__slider-inner"),
-        width = window.getComputedStyle(slidesWrapper).width;//получить примененный к анному эл-ту стиль, а именно его ширину//650px
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}){
+    const slides = document.querySelectorAll(slide),
+        slider = document.querySelector(container),//весь эл-т, включая навигацию и номера
+        next = document.querySelector(nextArrow),
+        prev = document.querySelector(prevArrow),
+        current = document.querySelector(currentCounter),
+        total = document.querySelector(totalCounter),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field),
+        width = window.getComputedStyle(slidesWrapper).width;//получить примененный к данному эл-ту стиль, а именно его ширину//650px
         
     let slideIndex = 1;//показываем по дефолту номер 1
     let offset = 0;//показываем по дефолту нулевой эл-т из псевдомассива
@@ -114,4 +112,4 @@ function slider(){
     });
 }
 
-module.exports = slider;
+export default slider;
