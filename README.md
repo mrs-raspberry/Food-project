@@ -34,11 +34,11 @@ practice native JS with Ivan Petrichenko's "Full JavaScript Course + React" (fro
 * таймер.
 
 ### Использованы технологии:
-* классы ES6 (для карточек меню),
+* Классы ES6 (для карточек меню),
 * REST-оператор и параметры по умолчанию,
 * Отправка данных на сервер при помощи XMLHTTPRequest,
-* fetch API для отправки и получения данных,
-* async/await,
-* localStorage,
+* Fetch API для отправки и получения данных,
+* Async/await,
+* LocalStorage,
 * Регулярные выражения, 
 * Webpack + ES6 Modules
