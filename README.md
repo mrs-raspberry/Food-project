@@ -1,4 +1,4 @@
-https://mrs-raspberry.github.io/Food-project/ 
+site is available here: https://mrs-raspberry.github.io/Food-project/ 
 
 # "Food" project
 practice native JS with Ivan Petrichenko's "Full JavaScript Course + React" (from Udemy.com).
@@ -22,7 +22,7 @@ practice native JS with Ivan Petrichenko's "Full JavaScript Course + React" (fro
 * RegExp,
 * Webpack + ES6 Modules
 
-
+сайт доступен по ссылке  https://mrs-raspberry.github.io/Food-project/ 
 # проект "Питание"
 практическое применение нативного JS по курсу Ивана Петриченко "Полный курс по JavaScript + React" (Udemy.com).
 
