@@ -5,9 +5,9 @@ function showModal(modalWindowSelector, modalTimerIDSelector) {
     modal.classList.remove("hide");
     document.body.style.overflow = "hidden";
 
-    console.log(modalTimerIDSelector);
-    if (modalTimerIDSelector){
+    if (modalTimerIDSelector) {
         clearInterval(modalTimerIDSelector);
+        console.log(modalTimerIDSelector);
     } //отменить показ модалки setInterval, кот прописан в гл файле, если пользователь уже сам его открывал 
 }
 
@@ -19,7 +19,7 @@ function closeModal(modalWindowSelector) {
     document.body.style.overflow = "";
 }
 
-function modal(TriggerSelector, modalWindowSelector, modalTimerIDSelector){
+function modal(TriggerSelector, modalWindowSelector, modalTimerIDSelector) {
     //Modal
     const modalTrigger = document.querySelectorAll(TriggerSelector),
         modal = document.querySelector(modalWindowSelector);
@@ -50,5 +50,9 @@ function modal(TriggerSelector, modalWindowSelector, modalTimerIDSelector){
 }
 
 export default modal;
-export {showModal};
-export {closeModal};
+export {
+    showModal
+};
+export {
+    closeModal
+};

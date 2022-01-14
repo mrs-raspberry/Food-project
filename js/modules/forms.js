@@ -66,7 +66,7 @@ function forms(formSelector, modalTimerIDSelector) {
             previousModal.classList.add("show");
             previousModal.classList.remove("hide");
             closeModal(".modal");
-        }, 8000);
+        }, 5000);
     }
 
     /* fetch("http://localhost:3000/menu")//шпора по fetch
