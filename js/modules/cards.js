@@ -10,13 +10,13 @@ function cards(){
             this.price = price;
             this.classes = classes;
             this.parent = document.querySelector(parentSelector);
-            this.transform = 9; //задаем курс валют (статическое значение), В дальнейшем будет использоваться более сложный механизм, курс валюты будет подгружаться из стороннего источника
+            this.transform = 75; //задаем курс валют (статическое значение), В дальнейшем будет использоваться более сложный механизм, курс валюты будет подгружаться из стороннего источника
             this.convertToUHA(); //запускаем тут же Ф по конвертации валюты
 
         }
 
         convertToUHA() { //доп.функционал для конвертации цены, данной в долларах в гривны. 
-            this.price = this.price * this.transform; //перезаписываем значение price
+            return this.price = this.price * this.transform; //перезаписываем значение price
         }
 
         render() {
@@ -32,7 +32,7 @@ function cards(){
                 <div class="menu__item-divider"></div>
                 <div class="menu__item-price">
                     <div class="menu__item-cost">Цена:</div>
-                    <div class="menu__item-total"><span></span>${this.price}грн/день</div>  
+                    <div class="menu__item-total"><span></span>${this.price}руб/день</div>  
             `;
             this.parent.append(element);
         }
