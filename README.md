@@ -1,4 +1,4 @@
-site is available here: https://mrs-raspberry.github.io/Food-project/ 
+website is available here: https://mrs-raspberry.github.io/Food-project/ 
 
 # "Food" project
 practice native JS with Ivan Petrichenko's "Full JavaScript Course + React" (from Udemy.com).
